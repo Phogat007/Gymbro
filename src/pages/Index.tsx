@@ -9,7 +9,8 @@ import {
   BarChart, 
   Calendar, 
   Flame, 
-  Trophy 
+  Trophy,
+  Apple
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -136,6 +137,12 @@ export default function Index() {
               <Link to="/challenges">
                 <Trophy className="h-4 w-4 mr-2" />
                 Join Challenges
+              </Link>
+            </Button>
+            <Button asChild className="w-full justify-start" variant="outline">
+              <Link to="/diet">
+                <Apple className="h-4 w-4 mr-2" />
+                Diet Suggestions
               </Link>
             </Button>
           </CardContent>

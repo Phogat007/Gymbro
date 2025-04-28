@@ -12,6 +12,7 @@ import Workouts from "./pages/Workouts";
 import Exercises from "./pages/Exercises";
 import Progress from "./pages/Progress";
 import Challenges from "./pages/Challenges";
+import Diet from "./pages/Diet";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
               <Route path="exercises" element={<Exercises />} />
               <Route path="progress" element={<Progress />} />
               <Route path="challenges" element={<Challenges />} />
+              <Route path="diet" element={<Diet />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>

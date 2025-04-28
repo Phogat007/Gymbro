@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Dumbbell, Menu, X } from "lucide-react";
+import { Dumbbell, Menu, X, Apple } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./theme-toggle";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,7 @@ export function Header() {
     { name: "Exercises", href: "/exercises" },
     { name: "Progress", href: "/progress" },
     { name: "Challenges", href: "/challenges" },
+    { name: "Diet", href: "/diet" },
   ];
 
   return (
