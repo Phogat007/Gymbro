@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useGym, Workout, Exercise, WorkoutExercise } from "@/lib/store";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus, Save, X, ChevronRight, ChevronLeft } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
-import { v4 as uuidv4 } from "@tanstack/react-query";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Workouts() {
   const { exercises, userData, addWorkout, getSuggestedExercises, updateWorkout } = useGym();
@@ -20,7 +19,6 @@ export default function Workouts() {
     getSuggestedExercises(userData.fitnessGoal, 6)
   );
 
-  // For pagination of past workouts
   const [page, setPage] = useState(0);
   const workoutsPerPage = 4;
   const totalWorkouts = userData.workouts.length;
@@ -42,7 +40,6 @@ export default function Workouts() {
 
     setSelectedExercises([...selectedExercises, newWorkoutExercise]);
     
-    // Remove from suggested list
     setSuggestedExercises(suggestedExercises.filter(ex => ex.id !== exercise.id));
     
     toast({
@@ -51,7 +48,6 @@ export default function Workouts() {
   };
 
   const handleRemoveExercise = (index: number) => {
-    // Get the exercise that's being removed
     const exerciseId = selectedExercises[index].exerciseId;
     const exerciseToAdd = exercises.find(ex => ex.id === exerciseId);
     
@@ -59,7 +55,6 @@ export default function Workouts() {
       setSuggestedExercises([...suggestedExercises, exerciseToAdd]);
     }
     
-    // Remove from selected
     const newExercises = [...selectedExercises];
     newExercises.splice(index, 1);
     setSelectedExercises(newExercises);
@@ -92,7 +87,6 @@ export default function Workouts() {
       description: "Your workout has been saved successfully.",
     });
     
-    // Reset state
     setWorkoutName("New Workout");
     setSelectedExercises([]);
     setIsCreating(false);

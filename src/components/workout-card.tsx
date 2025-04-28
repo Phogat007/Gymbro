@@ -13,13 +13,14 @@ interface WorkoutCardProps {
   completed?: boolean;
   date?: string;
   className?: string;
+  onClick?: () => void;
   cta?: {
     label: string;
     to: string;
   };
 }
 
-export function WorkoutCard({ title, exercises, completed, date, className, cta }: WorkoutCardProps) {
+export function WorkoutCard({ title, exercises, completed, date, className, cta, onClick }: WorkoutCardProps) {
   return (
     <Card className={cn("h-full flex flex-col", className)}>
       <CardHeader>
@@ -54,7 +55,7 @@ export function WorkoutCard({ title, exercises, completed, date, className, cta 
       </CardContent>
       {cta && (
         <CardFooter>
-          <Button asChild variant="outline" className="w-full group">
+          <Button asChild variant="outline" className="w-full group" onClick={onClick}>
             <Link to={cta.to}>
               {cta.label}
               <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
