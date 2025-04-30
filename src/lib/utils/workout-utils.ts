@@ -1,5 +1,6 @@
 
 import { defaultExercises } from '../data/default-exercises';
+import { motivationalQuotes } from '../data/motivational-quotes';
 import { Exercise, FitnessGoal, WorkoutCategory } from '../types';
 
 // Get exercises based on user's fitness goal
@@ -11,7 +12,6 @@ export function getSuggestedExercises(goal: FitnessGoal, count = 5): Exercise[] 
 
 // Get random motivational quote
 export function getMotivationalQuote(): string {
-  const { motivationalQuotes } = require('../data/motivational-quotes');
   const randomIndex = Math.floor(Math.random() * motivationalQuotes.length);
   return motivationalQuotes[randomIndex];
 }
