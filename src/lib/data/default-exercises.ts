@@ -1,0 +1,85 @@
+
+import { Exercise } from '../types';
+
+export const defaultExercises: Exercise[] = [
+  {
+    id: 'ex1',
+    name: 'Push-Ups',
+    category: 'upper_body',
+    targetMuscles: ['chest', 'triceps', 'shoulders'],
+    instructions: 'Start in a plank position, lower your body until your chest nearly touches the floor, then push back up.',
+    recommendedFor: ['gain_muscle', 'stay_fit'],
+  },
+  {
+    id: 'ex2',
+    name: 'Squats',
+    category: 'lower_body',
+    targetMuscles: ['quadriceps', 'hamstrings', 'glutes'],
+    instructions: 'Stand with feet shoulder-width apart, lower your hips back and down, then return to standing.',
+    recommendedFor: ['gain_muscle', 'lose_fat', 'stay_fit'],
+  },
+  {
+    id: 'ex3',
+    name: 'Lunges',
+    category: 'lower_body',
+    targetMuscles: ['quadriceps', 'hamstrings', 'glutes'],
+    instructions: 'Step forward with one leg, lowering your hips until both knees are bent at about a 90-degree angle.',
+    recommendedFor: ['gain_muscle', 'lose_fat', 'stay_fit'],
+  },
+  {
+    id: 'ex4',
+    name: 'Pull-Ups',
+    category: 'upper_body',
+    targetMuscles: ['back', 'biceps', 'shoulders'],
+    instructions: 'Hang from a bar with hands shoulder-width apart, pull your body up until your chin is over the bar.',
+    recommendedFor: ['gain_muscle', 'stay_fit'],
+  },
+  {
+    id: 'ex5',
+    name: 'Plank',
+    category: 'core',
+    targetMuscles: ['abdominals', 'lower back'],
+    instructions: 'Hold a position similar to a push-up, but with your weight on your forearms.',
+    recommendedFor: ['gain_muscle', 'lose_fat', 'stay_fit'],
+  },
+  {
+    id: 'ex6',
+    name: 'Jumping Jacks',
+    category: 'cardio',
+    targetMuscles: ['full body'],
+    instructions: 'Jump while spreading your legs and raising your arms above your head, then return to standing.',
+    recommendedFor: ['lose_fat', 'stay_fit'],
+  },
+  {
+    id: 'ex7',
+    name: 'Bicycle Crunches',
+    category: 'core',
+    targetMuscles: ['abdominals', 'obliques'],
+    instructions: 'Lie on your back, bring your knees to your chest, and alternate bringing each elbow to the opposite knee.',
+    recommendedFor: ['lose_fat', 'stay_fit'],
+  },
+  {
+    id: 'ex8',
+    name: 'Bench Press',
+    category: 'upper_body',
+    targetMuscles: ['chest', 'triceps', 'shoulders'],
+    instructions: 'Lie on a bench, lower a barbell to your chest, then push it back up.',
+    recommendedFor: ['gain_muscle'],
+  },
+  {
+    id: 'ex9',
+    name: 'Deadlift',
+    category: 'full_body',
+    targetMuscles: ['lower back', 'hamstrings', 'glutes', 'traps'],
+    instructions: 'Stand with a barbell at your shins, hinge at the hips to grip the bar, then stand up straight.',
+    recommendedFor: ['gain_muscle'],
+  },
+  {
+    id: 'ex10',
+    name: 'Mountain Climbers',
+    category: 'cardio',
+    targetMuscles: ['core', 'shoulders', 'legs'],
+    instructions: 'Start in a plank position, then alternate bringing each knee to your chest.',
+    recommendedFor: ['lose_fat', 'stay_fit'],
+  }
+];
