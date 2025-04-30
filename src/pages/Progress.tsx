@@ -8,9 +8,9 @@ import {
   Trophy, 
   Dumbbell,
   Activity,
-  "chart-pie": ChartPieIcon,
-  "chart-line": ChartLineIcon,
-  "radar": RadarIcon,
+  PieChart as ChartPieIcon,
+  LineChart as ChartLineIcon,
+  Radar as RadarIcon,
 } from "lucide-react";
 import { format, subDays, eachDayOfInterval, startOfWeek } from "date-fns";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
