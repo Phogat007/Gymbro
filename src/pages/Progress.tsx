@@ -1,4 +1,3 @@
-
 import { useGym, WorkoutCategory } from "@/lib/store";
 import { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -30,7 +29,10 @@ export interface ProgressChartData {
   workoutFrequencyData: Array<{ date: string; workouts: number }>;
   volumeData: Array<{ category: string; volume: number }>;
   workoutDistribution: Array<{ name: string; value: number }>;
-  weightProgressionData: Array<{ date: string; [exerciseId: string]: number }>;
+  weightProgressionData: Array<{ 
+    date: string; 
+    [exerciseId: string]: number | string;  // Updated to allow string (for date property)
+  }>;
   muscleCoverageData: Array<{ muscle: string; coverage: number }>;
   heatmapData: Array<{ date: string; count: number }>;
   totalWorkouts: number;
@@ -160,8 +162,7 @@ export default function Progress() {
       .map(([date, exercises]) => ({
         date,
         ...exercises
-      }))
-      .sort((a, b) => a.date.localeCompare(b.date));
+      }));
     
     // Muscle coverage data for radar chart
     const muscleUsage: Record<string, number> = {};

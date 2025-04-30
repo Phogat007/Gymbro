@@ -15,14 +15,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 
 interface WeightOverTimeProps {
-  data: Array<{ date: string; [exerciseId: string]: number }>;
+  data: Array<{ 
+    date: string; 
+    [exerciseId: string]: number | string; // Updated to allow string (for date property)
+  }>;
   exercises: Exercise[];
 }
 
 export function ProgressWeightOverTime({ data, exercises }: WeightOverTimeProps) {
   // Find exercises that have weight data
   const exercisesWithData = exercises.filter(ex => 
-    data.some(d => d[ex.id] !== undefined)
+    data.some(d => d[ex.id] !== undefined && typeof d[ex.id] === 'number')
   );
   
   const [selectedExercise, setSelectedExercise] = useState<string | null>(
@@ -32,7 +35,7 @@ export function ProgressWeightOverTime({ data, exercises }: WeightOverTimeProps)
   // Filter the data to include only the selected exercise
   const chartData = selectedExercise ? data.map(d => ({
     date: d.date,
-    weight: d[selectedExercise]
+    weight: d[selectedExercise] as number // Explicit cast since we know it's a number
   })).filter(d => d.weight !== undefined) : [];
 
   return (
