@@ -4,26 +4,48 @@ import { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatsCard } from "@/components/stats-card";
 import { 
-  BarChart as BarChartIcon, 
-  Calendar, 
+  Calendar,
   Trophy, 
   Dumbbell,
-  Activity
+  Activity,
+  "chart-pie": ChartPieIcon,
+  "chart-line": ChartLineIcon,
+  "radar": RadarIcon,
 } from "lucide-react";
-import { format, subDays } from "date-fns";
-import { BarChart, ResponsiveContainer, XAxis, YAxis, Bar, Tooltip, CartesianGrid, LineChart, Line, Legend } from "recharts";
+import { format, subDays, eachDayOfInterval, startOfWeek } from "date-fns";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SelectValue, SelectTrigger, SelectContent, SelectItem, Select } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { ProgressWorkoutFrequency } from "@/components/progress/workout-frequency";
+import { ProgressVolumeByCategory } from "@/components/progress/volume-by-category";
+import { ProgressWeightOverTime } from "@/components/progress/weight-over-time";
+import { ProgressWorkoutDistribution } from "@/components/progress/workout-distribution";
+import { ProgressMuscleCoverage } from "@/components/progress/muscle-coverage";
+import { ProgressWorkoutHeatmap } from "@/components/progress/workout-heatmap";
 
 type TimeRange = '7days' | '30days' | '90days' | 'all';
+
+export interface ProgressChartData {
+  workoutFrequencyData: Array<{ date: string; workouts: number }>;
+  volumeData: Array<{ category: string; volume: number }>;
+  workoutDistribution: Array<{ name: string; value: number }>;
+  weightProgressionData: Array<{ date: string; [exerciseId: string]: number }>;
+  muscleCoverageData: Array<{ muscle: string; coverage: number }>;
+  heatmapData: Array<{ date: string; count: number }>;
+  totalWorkouts: number;
+  completedWorkouts: number;
+  totalVolume: number;
+  activeDays: number;
+}
 
 export default function Progress() {
   const { userData, exercises } = useGym();
   const [timeRange, setTimeRange] = useState<TimeRange>('30days');
+  const [selectedTab, setSelectedTab] = useState('frequency');
   
   // Calculate data for charts
-  const chartData = useMemo(() => {
+  const chartData = useMemo<ProgressChartData>(() => {
     const now = new Date();
     let startDate: Date;
     
@@ -95,9 +117,98 @@ export default function Progress() {
       }))
       .sort((a, b) => b.volume - a.volume);
     
+    // Workout distribution for pie chart
+    const totalWorkoutsByCategory: Record<string, number> = {};
+    
+    filteredWorkouts.forEach(workout => {
+      workout.exercises.forEach(workoutEx => {
+        const exercise = exercises.find(ex => ex.id === workoutEx.exerciseId);
+        if (exercise) {
+          const category = exercise.category.replace('_', ' ');
+          if (!totalWorkoutsByCategory[category]) {
+            totalWorkoutsByCategory[category] = 0;
+          }
+          totalWorkoutsByCategory[category] += 1;
+        }
+      });
+    });
+    
+    const workoutDistribution = Object.entries(totalWorkoutsByCategory)
+      .map(([name, value]) => ({ name, value }));
+      
+    // Weight progression over time for line chart
+    const exerciseProgress: Record<string, Record<string, number>> = {};
+    
+    filteredWorkouts.forEach(workout => {
+      const workoutDate = format(new Date(workout.date), 'MMM d');
+      
+      workout.exercises.forEach(workoutEx => {
+        const exercise = exercises.find(ex => ex.id === workoutEx.exerciseId);
+        if (exercise) {
+          if (!exerciseProgress[workoutDate]) {
+            exerciseProgress[workoutDate] = {};
+          }
+          
+          // Find the max weight for this exercise on this date
+          const maxWeight = Math.max(...workoutEx.sets.map(set => set.weight));
+          exerciseProgress[workoutDate][exercise.id] = maxWeight;
+        }
+      });
+    });
+    
+    const weightProgressionData = Object.entries(exerciseProgress)
+      .map(([date, exercises]) => ({
+        date,
+        ...exercises
+      }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+    
+    // Muscle coverage data for radar chart
+    const muscleUsage: Record<string, number> = {};
+    
+    filteredWorkouts.forEach(workout => {
+      workout.exercises.forEach(workoutEx => {
+        const exercise = exercises.find(ex => ex.id === workoutEx.exerciseId);
+        if (exercise) {
+          exercise.targetMuscles.forEach(muscle => {
+            if (!muscleUsage[muscle]) {
+              muscleUsage[muscle] = 0;
+            }
+            muscleUsage[muscle] += 1;
+          });
+        }
+      });
+    });
+    
+    // Normalize to 0-100 scale
+    const maxMuscleUsage = Math.max(1, ...Object.values(muscleUsage));
+    const muscleCoverageData = Object.entries(muscleUsage)
+      .map(([muscle, count]) => ({
+        muscle,
+        coverage: Math.round((count / maxMuscleUsage) * 100)
+      }));
+    
+    // Calendar heatmap data
+    let dateInterval = eachDayOfInterval({
+      start: startDate,
+      end: now
+    });
+    
+    const heatmapData = dateInterval.map(date => {
+      const formattedDate = format(date, 'yyyy-MM-dd');
+      return {
+        date: formattedDate,
+        count: workoutsByDate[formattedDate] || 0
+      };
+    });
+    
     return {
       workoutFrequencyData,
       volumeData,
+      workoutDistribution,
+      weightProgressionData,
+      muscleCoverageData,
+      heatmapData,
       totalWorkouts: filteredWorkouts.length,
       completedWorkouts: filteredWorkouts.filter(w => w.completed).length,
       totalVolume: Object.values(volumeByCategory).reduce((sum, val) => sum + val, 0),
@@ -162,70 +273,59 @@ export default function Progress() {
         />
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className={cn("lg:col-span-2", chartData.workoutFrequencyData.length === 0 && "hidden")}>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <BarChartIcon className="h-5 w-5 mr-2" />
-              Workout Frequency
-            </CardTitle>
+      {chartData.totalWorkouts > 0 ? (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle>Progress Charts</CardTitle>
           </CardHeader>
-          <CardContent className="h-80">
-            {chartData.workoutFrequencyData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData.workoutFrequencyData}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="date" />
-                  <YAxis allowDecimals={false} />
-                  <Tooltip />
-                  <Bar dataKey="workouts" fill="#F97316" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="flex justify-center items-center h-full">
-                <p className="text-muted-foreground">No workout data available for the selected time range.</p>
-              </div>
-            )}
+          <CardContent>
+            <Tabs value={selectedTab} onValueChange={setSelectedTab}>
+              <TabsList className="grid grid-cols-3 md:grid-cols-6 mb-4">
+                <TabsTrigger value="frequency">Frequency</TabsTrigger>
+                <TabsTrigger value="volume">Volume</TabsTrigger>
+                <TabsTrigger value="weights">Weight Progress</TabsTrigger>
+                <TabsTrigger value="distribution">Distribution</TabsTrigger>
+                <TabsTrigger value="muscles">Muscle Coverage</TabsTrigger>
+                <TabsTrigger value="heatmap">Calendar View</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="frequency" className="h-80">
+                <ProgressWorkoutFrequency data={chartData.workoutFrequencyData} />
+              </TabsContent>
+              
+              <TabsContent value="volume" className="h-80">
+                <ProgressVolumeByCategory data={chartData.volumeData} />
+              </TabsContent>
+              
+              <TabsContent value="weights" className="h-80">
+                <ProgressWeightOverTime 
+                  data={chartData.weightProgressionData} 
+                  exercises={exercises}
+                />
+              </TabsContent>
+              
+              <TabsContent value="distribution" className="h-80">
+                <ProgressWorkoutDistribution data={chartData.workoutDistribution} />
+              </TabsContent>
+              
+              <TabsContent value="muscles" className="h-80">
+                <ProgressMuscleCoverage data={chartData.muscleCoverageData} />
+              </TabsContent>
+              
+              <TabsContent value="heatmap" className="h-80">
+                <ProgressWorkoutHeatmap data={chartData.heatmapData} />
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
-        
-        <Card className={chartData.volumeData.some(d => d.volume > 0) ? "" : "hidden"}>
-          <CardHeader>
-            <CardTitle>Volume By Body Part</CardTitle>
-          </CardHeader>
-          <CardContent className="h-80">
-            {chartData.volumeData.some(d => d.volume > 0) ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart 
-                  data={chartData.volumeData} 
-                  layout="vertical"
-                >
-                  <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
-                  <XAxis type="number" />
-                  <YAxis dataKey="category" type="category" width={80} />
-                  <Tooltip />
-                  <Bar dataKey="volume" fill="#10B981" radius={[0, 4, 4, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="flex justify-center items-center h-full">
-                <p className="text-muted-foreground">No volume data available for the selected time range.</p>
-              </div>
-            )}
-          </CardContent>
+      ) : (
+        <Card className="p-6 text-center">
+          <p className="text-muted-foreground mb-4">
+            No workout data available for the selected time range.
+          </p>
+          <p>Complete some workouts to see your progress charts here!</p>
         </Card>
-        
-        {/* If we had more data points, we could add more charts here */}
-        
-        {chartData.totalWorkouts === 0 && (
-          <Card className="lg:col-span-2 p-6 text-center">
-            <p className="text-muted-foreground mb-4">
-              No workout data available for the selected time range.
-            </p>
-            <p>Complete some workouts to see your progress charts here!</p>
-          </Card>
-        )}
-      </div>
+      )}
     </div>
   );
 }
