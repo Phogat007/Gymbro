@@ -2,23 +2,25 @@
 import { Outlet } from "react-router-dom";
 import { Header } from "./header";
 import { ThemeProvider } from "./theme-provider";
+import { Footer } from "./footer";
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export function Layout() {
   return (
     <ThemeProvider defaultTheme="light">
-      <div className="relative min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-1">
-          <Outlet />
-        </main>
-        <footer className="border-t py-6 md:py-0">
-          <div className="container flex flex-col items-center justify-between gap-4 md:h-14 md:flex-row">
-            <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-              Built with ❤️ by Gym Mate &copy; {new Date().getFullYear()}
-            </p>
-          </div>
-        </footer>
-      </div>
+      <TooltipProvider>
+        <div className="relative min-h-screen flex flex-col bg-background transition-colors duration-300">
+          <Header />
+          <main className="flex-1 pt-4 pb-12">
+            <Outlet />
+          </main>
+          <Footer />
+          <Toaster />
+          <Sonner />
+        </div>
+      </TooltipProvider>
     </ThemeProvider>
   );
 }
