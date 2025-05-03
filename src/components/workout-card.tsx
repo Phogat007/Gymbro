@@ -15,9 +15,12 @@ interface WorkoutCardProps {
     to: string;
   };
   className?: string;
+  date?: string;
+  completed?: boolean;
+  onClick?: () => void;
 }
 
-export function WorkoutCard({ title, exercises, cta, className }: WorkoutCardProps) {
+export function WorkoutCard({ title, exercises, cta, className, date, completed, onClick }: WorkoutCardProps) {
   // Calculate estimated time: about 5 minutes per exercise
   const estimatedTime = exercises.length * 5;
   
@@ -61,7 +64,10 @@ export function WorkoutCard({ title, exercises, cta, className }: WorkoutCardPro
                   {index + 1}
                 </span>
                 <span className="flex-1">{exercise.name}</span>
-                <span className="text-muted-foreground">{exercise.recommendedSets || 3} × {exercise.recommendedReps || "10-12"}</span>
+                <span className="text-muted-foreground">
+                  {/* Use default values for sets and reps since they don't exist on the Exercise type */}
+                  3 × 10-12
+                </span>
               </li>
             ))}
           </ul>
