@@ -42,6 +42,14 @@
     --orange-light: 32 100% 72%;
     --green: 156 64% 40%;
     --green-light: 156 64% 74%;
+
+    /* Sidebar colors */
+    --sidebar: 210 40% 98%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 222 84% 5%;
+    --sidebar-accent: 222 47% 20%;
+    --sidebar-accent-foreground: 210 40% 98%;
   }
 
   .dark {
@@ -72,6 +80,14 @@
     --border: 217 33% 18%;
     --input: 217 33% 18%;
     --ring: 213 27% 84%;
+    
+    /* Sidebar dark mode colors */
+    --sidebar: 222 47% 13%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 20%;
+    --sidebar-ring: 213 27% 84%;
+    --sidebar-accent: 210 40% 96%;
+    --sidebar-accent-foreground: 222 47% 11%;
   }
 }
 
@@ -171,4 +187,15 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Mobile breakpoint */
+@media (max-width: 640px) {
+  .xs\:inline {
+    display: inline;
+  }
+  
+  .xs\:hidden {
+    display: none;
+  }
 }

@@ -23,6 +23,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "@/components/ui/use-toast";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const goalLabels: Record<FitnessGoal, string> = {
   gain_muscle: "Build Muscle",
@@ -42,6 +43,13 @@ const goalIcons: Record<FitnessGoal, React.ReactNode> = {
   stay_fit: <Zap className="h-5 w-5 text-blue" />
 };
 
+// Short mobile names for goals
+const mobileGoalLabels: Record<FitnessGoal, string> = {
+  gain_muscle: "Muscle",
+  lose_fat: "Fat Loss",
+  stay_fit: "Fit"
+};
+
 export default function Index() {
   const { 
     userData, 
@@ -52,6 +60,7 @@ export default function Index() {
   const [activeTab, setActiveTab] = useState<FitnessGoal>(userData.fitnessGoal);
   const [isLoading, setIsLoading] = useState(false);
   const recommendedWorkout = getRecommendedWorkout();
+  const isMobile = useIsMobile();
   
   // Update user goal when tab changes
   useEffect(() => {
@@ -99,10 +108,37 @@ export default function Index() {
               onValueChange={(v) => setActiveTab(v as FitnessGoal)} 
               className="w-full"
             >
-              <TabsList className="grid grid-cols-3 w-full mb-4">
-                <TabsTrigger value="gain_muscle" disabled={isLoading}>Build Muscle</TabsTrigger>
-                <TabsTrigger value="lose_fat" disabled={isLoading}>Lose Fat</TabsTrigger>
-                <TabsTrigger value="stay_fit" disabled={isLoading}>Stay Fit</TabsTrigger>
+              <TabsList className="grid grid-cols-3 w-full">
+                <TabsTrigger value="gain_muscle" disabled={isLoading} className="text-xs md:text-sm px-1 md:px-3">
+                  {isMobile ? (
+                    <div className="flex flex-col items-center">
+                      <Dumbbell className="h-4 w-4 mb-1" />
+                      <span>{mobileGoalLabels.gain_muscle}</span>
+                    </div>
+                  ) : (
+                    goalLabels.gain_muscle
+                  )}
+                </TabsTrigger>
+                <TabsTrigger value="lose_fat" disabled={isLoading} className="text-xs md:text-sm px-1 md:px-3">
+                  {isMobile ? (
+                    <div className="flex flex-col items-center">
+                      <Flame className="h-4 w-4 mb-1" />
+                      <span>{mobileGoalLabels.lose_fat}</span>
+                    </div>
+                  ) : (
+                    goalLabels.lose_fat
+                  )}
+                </TabsTrigger>
+                <TabsTrigger value="stay_fit" disabled={isLoading} className="text-xs md:text-sm px-1 md:px-3">
+                  {isMobile ? (
+                    <div className="flex flex-col items-center">
+                      <Zap className="h-4 w-4 mb-1" />
+                      <span>{mobileGoalLabels.stay_fit}</span>
+                    </div>
+                  ) : (
+                    goalLabels.stay_fit
+                  )}
+                </TabsTrigger>
               </TabsList>
               
               <TabsContent value={activeTab} className="animate-fade-in">
@@ -187,14 +223,14 @@ export default function Index() {
       <QuoteBanner />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className={cn("md:col-span-2", "h-full border-orange/20 hover:border-orange/30 transition-colors")}>
+        <Card className={cn("md:col-span-2", "border-orange/20 hover:border-orange/30 transition-colors")}>
           <CardHeader>
             <CardTitle className="flex items-center">
               <Calendar className="h-5 w-5 mr-2 text-orange" />
               Recommended Workout
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4 pt-0 md:p-6 md:pt-0">
             <WorkoutCard 
               title={recommendedWorkout.title}
               exercises={recommendedWorkout.exercises}

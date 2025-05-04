@@ -44,15 +44,20 @@ export function WorkoutCard({ title, exercises, cta, className, date, completed,
           </Badge>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-4 md:p-6">
         <div className="mb-4">
-          <div className="flex items-center gap-1 text-sm text-muted-foreground mb-2">
-            <Dumbbell className="h-3.5 w-3.5" />
-            <span>{exercises.length} exercises</span>
+          <div className="flex flex-wrap items-center gap-1 text-sm text-muted-foreground mb-2">
+            <div className="flex items-center gap-1">
+              <Dumbbell className="h-3.5 w-3.5" />
+              <span>{exercises.length} exercises</span>
+            </div>
             {targetMuscles.length > 0 && (
               <>
-                <span className="mx-1">·</span>
-                <span>Targets: {targetMuscles.join(", ")}</span>
+                <span className="mx-1 hidden xs:inline">·</span>
+                <span className="flex-wrap">
+                  <span className="mr-1 xs:hidden">•</span>
+                  <span>Targets: {targetMuscles.join(", ")}</span>
+                </span>
               </>
             )}
           </div>
@@ -63,9 +68,8 @@ export function WorkoutCard({ title, exercises, cta, className, date, completed,
                 <span className="flex items-center justify-center w-5 h-5 rounded-full bg-orange/10 text-orange text-xs">
                   {index + 1}
                 </span>
-                <span className="flex-1">{exercise.name}</span>
-                <span className="text-muted-foreground">
-                  {/* Use default values for sets and reps since they don't exist on the Exercise type */}
+                <span className="flex-1 truncate">{exercise.name}</span>
+                <span className="text-muted-foreground whitespace-nowrap">
                   3 × 10-12
                 </span>
               </li>
