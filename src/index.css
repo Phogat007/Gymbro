@@ -36,20 +36,6 @@
     --ring: 222 84% 5%;
 
     --radius: 0.5rem;
-    
-    /* Custom colors */
-    --orange: 24 95% 53%;
-    --orange-light: 32 100% 72%;
-    --green: 156 64% 40%;
-    --green-light: 156 64% 74%;
-
-    /* Sidebar colors */
-    --sidebar: 210 40% 98%;
-    --sidebar-foreground: 222 47% 11%;
-    --sidebar-border: 214 32% 91%;
-    --sidebar-ring: 222 84% 5%;
-    --sidebar-accent: 222 47% 20%;
-    --sidebar-accent-foreground: 210 40% 98%;
   }
 
   .dark {
@@ -80,14 +66,6 @@
     --border: 217 33% 18%;
     --input: 217 33% 18%;
     --ring: 213 27% 84%;
-    
-    /* Sidebar dark mode colors */
-    --sidebar: 222 47% 13%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-border: 217 33% 20%;
-    --sidebar-ring: 213 27% 84%;
-    --sidebar-accent: 210 40% 96%;
-    --sidebar-accent-foreground: 222 47% 11%;
   }
 }
 
@@ -103,19 +81,19 @@
 
   /* Typography */
   h1, h2, h3, h4, h5, h6 {
-    @apply font-bold tracking-tight;
+    @apply font-bold;
   }
 
   h1 {
-    @apply text-3xl md:text-4xl mb-2;
+    @apply text-3xl md:text-4xl;
   }
 
   h2 {
-    @apply text-2xl md:text-3xl mb-2;
+    @apply text-2xl md:text-3xl;
   }
 
   h3 {
-    @apply text-xl md:text-2xl mb-1;
+    @apply text-xl md:text-2xl;
   }
 
   /* Custom components */
@@ -133,69 +111,5 @@
   
   .gym-button-secondary {
     @apply bg-secondary hover:bg-secondary/80 text-secondary-foreground font-semibold py-2 px-4 rounded-md transition-all duration-200;
-  }
-
-  /* Animation utilities */
-  .hover-scale {
-    @apply transition-transform duration-200 hover:scale-105;
-  }
-  
-  .hover-lift {
-    @apply transition-transform duration-200 hover:-translate-y-1;
-  }
-  
-  .hover-bright {
-    @apply transition-all duration-200 hover:brightness-110;
-  }
-}
-
-/* Page transitions */
-.page-enter {
-  opacity: 0;
-  transform: translateY(10px);
-}
-
-.page-enter-active {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 300ms, transform 300ms;
-}
-
-.page-exit {
-  opacity: 1;
-}
-
-.page-exit-active {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 300ms, transform 300ms;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: hsl(var(--background));
-}
-
-::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.3);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.5);
-}
-
-/* Mobile breakpoint */
-@media (max-width: 640px) {
-  .xs\:inline {
-    display: inline;
-  }
-  
-  .xs\:hidden {
-    display: none;
   }
 }

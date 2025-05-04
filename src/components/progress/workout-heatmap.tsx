@@ -28,11 +28,11 @@ export function ProgressWorkoutHeatmap({ data }: WorkoutHeatmapProps) {
 
   // Function to get color intensity based on workout count
   const getColorIntensity = (count: number) => {
-    if (count === 0) return "bg-gray-100 dark:bg-gray-800";
-    if (count === 1) return "bg-orange-200 dark:bg-orange-900";
-    if (count === 2) return "bg-orange-300 dark:bg-orange-800";
-    if (count === 3) return "bg-orange-400 dark:bg-orange-700";
-    return "bg-orange-500 dark:bg-orange-600";
+    if (count === 0) return "bg-gray-100";
+    if (count === 1) return "bg-orange-200";
+    if (count === 2) return "bg-orange-300";
+    if (count === 3) return "bg-orange-400";
+    return "bg-orange-500";
   };
   
   return (
@@ -64,7 +64,7 @@ export function ProgressWorkoutHeatmap({ data }: WorkoutHeatmapProps) {
                     isToday(date) ? 'ring-2 ring-primary' : ''
                   }`}
                 >
-                  <span className="text-xs font-medium dark:text-gray-200">
+                  <span className="text-xs font-medium">
                     {format(date, 'd')}
                   </span>
                 </div>
@@ -81,11 +81,11 @@ export function ProgressWorkoutHeatmap({ data }: WorkoutHeatmapProps) {
         <div className="flex items-center justify-center mt-6 gap-2">
           <div className="text-sm">Workout intensity:</div>
           <div className="flex gap-1">
-            <div className="w-4 h-4 bg-gray-100 dark:bg-gray-800 rounded"></div>
-            <div className="w-4 h-4 bg-orange-200 dark:bg-orange-900 rounded"></div>
-            <div className="w-4 h-4 bg-orange-300 dark:bg-orange-800 rounded"></div>
-            <div className="w-4 h-4 bg-orange-400 dark:bg-orange-700 rounded"></div>
-            <div className="w-4 h-4 bg-orange-500 dark:bg-orange-600 rounded"></div>
+            <div className="w-4 h-4 bg-gray-100 rounded"></div>
+            <div className="w-4 h-4 bg-orange-200 rounded"></div>
+            <div className="w-4 h-4 bg-orange-300 rounded"></div>
+            <div className="w-4 h-4 bg-orange-400 rounded"></div>
+            <div className="w-4 h-4 bg-orange-500 rounded"></div>
           </div>
           <div className="text-sm flex gap-1">
             <span>0</span>

@@ -1,90 +1,68 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Exercise } from "@/lib/store";
+import { Badge } from "@/components/ui/badge";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Clock, Dumbbell } from "lucide-react";
+import { Exercise } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 interface WorkoutCardProps {
   title: string;
   exercises: Exercise[];
+  completed?: boolean;
+  date?: string;
+  className?: string;
+  onClick?: () => void;
   cta?: {
     label: string;
     to: string;
   };
-  className?: string;
-  date?: string;
-  completed?: boolean;
-  onClick?: () => void;
 }
 
-export function WorkoutCard({ title, exercises, cta, className, date, completed, onClick }: WorkoutCardProps) {
-  // Calculate estimated time: about 5 minutes per exercise
-  const estimatedTime = exercises.length * 5;
-  
-  const getTargetMuscleGroups = () => {
-    const muscleGroups = new Set(
-      exercises.flatMap(exercise => exercise.targetMuscles || [])
-    );
-    return Array.from(muscleGroups).slice(0, 3); // Show max 3 muscle groups
-  };
-
-  const targetMuscles = getTargetMuscleGroups();
-  
+export function WorkoutCard({ title, exercises, completed, date, className, cta, onClick }: WorkoutCardProps) {
   return (
-    <Card className={cn("border-orange/20 hover:border-orange/30 transition-colors", className)}>
-      <CardHeader className="pb-2">
-        <div className="flex justify-between items-start">
+    <Card className={cn("h-full flex flex-col", className)}>
+      <CardHeader>
+        <div className="flex justify-between items-center">
           <CardTitle className="text-lg">{title}</CardTitle>
-          <Badge variant="outline" className="flex items-center gap-1 border-orange/50 text-orange">
-            <Clock className="h-3.5 w-3.5" />
-            {estimatedTime} min
-          </Badge>
+          {completed && (
+            <Badge variant="default" className="bg-green text-white">
+              <CheckCircle2 className="h-3 w-3 mr-1" />
+              Completed
+            </Badge>
+          )}
         </div>
+        {date && <p className="text-sm text-muted-foreground">{date}</p>}
       </CardHeader>
-      <CardContent className="p-4 md:p-6">
-        <div className="mb-4">
-          <div className="flex flex-wrap items-center gap-1 text-sm text-muted-foreground mb-2">
-            <div className="flex items-center gap-1">
-              <Dumbbell className="h-3.5 w-3.5" />
-              <span>{exercises.length} exercises</span>
-            </div>
-            {targetMuscles.length > 0 && (
-              <>
-                <span className="mx-1 hidden xs:inline">·</span>
-                <span className="flex-wrap">
-                  <span className="mr-1 xs:hidden">•</span>
-                  <span>Targets: {targetMuscles.join(", ")}</span>
-                </span>
-              </>
-            )}
-          </div>
-          
-          <ul className="space-y-2 mt-3">
-            {exercises.map((exercise, index) => (
-              <li key={index} className="flex items-center gap-2 text-sm">
-                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-orange/10 text-orange text-xs">
-                  {index + 1}
-                </span>
-                <span className="flex-1 truncate">{exercise.name}</span>
-                <span className="text-muted-foreground whitespace-nowrap">
-                  3 × 10-12
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-        
-        {cta && (
-          <Button asChild className="w-full" size="sm">
+      <CardContent className="flex-grow">
+        <ul className="space-y-2">
+          {exercises.slice(0, 4).map((exercise) => (
+            <li key={exercise.id} className="flex items-center text-sm">
+              <span className="h-1.5 w-1.5 rounded-full bg-orange mr-2"></span>
+              <span>{exercise.name}</span>
+              <span className="text-xs text-muted-foreground ml-auto">
+                {exercise.category.replace('_', ' ')}
+              </span>
+            </li>
+          ))}
+          {exercises.length > 4 && (
+            <li className="text-xs text-muted-foreground pl-4">
+              +{exercises.length - 4} more exercises
+            </li>
+          )}
+        </ul>
+      </CardContent>
+      {cta && (
+        <CardFooter>
+          <Button asChild variant="outline" className="w-full group" onClick={onClick}>
             <Link to={cta.to}>
               {cta.label}
+              <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
             </Link>
           </Button>
-        )}
-      </CardContent>
+        </CardFooter>
+      )}
     </Card>
   );
 }
